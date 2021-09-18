@@ -13,7 +13,7 @@ func deleteBranches(onlyMerged bool) {
 	branchesToDelete, err := getAllBranchesExceptCurrent()
 
 	if err != nil {
-		print("error...")
+		fmt.Print("Not a git repository...")
 		return
 	}
 
@@ -32,7 +32,7 @@ func deleteBranches(onlyMerged bool) {
 				fmt.Print("Exiting...")
 				return
 			} else if inputDelete == "n" {
-				fmt.Printf("Skiping %q branch", branch)
+				fmt.Printf("Skiping %q branch\n", branch)
 				continue
 			}
 
@@ -40,6 +40,8 @@ func deleteBranches(onlyMerged bool) {
 		}
 		deleteBranch(branch, onlyMerged)
 	}
+
+	fmt.Print("No branches left")
 }
 
 func deleteBranch(branchName string, onlyMerged bool) {
@@ -98,7 +100,10 @@ func main() {
 	flag.Parse()
 
 	if toDeleteAll && toDeleteMerged {
-		print(fmt.Sprintf("Can not provide both %s and %s flags.", deleteMergedFlagName, deleteAllFlagName))
+		print(fmt.Sprintf("Can not provide both %q and %q flags.", deleteMergedFlagName, deleteAllFlagName))
+		return
+	} else if !toDeleteAll && !toDeleteMerged {
+		print(fmt.Sprintf("Please specify one of the following falgs: %q and %q.", deleteMergedFlagName, deleteAllFlagName))
 		return
 	}
 
